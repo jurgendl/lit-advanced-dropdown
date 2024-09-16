@@ -1,9 +1,9 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, state, query } from 'lit/decorators.js'
+import { LitElement, /*css,*/ html, unsafeCSS } from 'lit'
+import { customElement, state, /*query,*/ property } from 'lit/decorators.js'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 //import { classMap } from 'lit/directives/class-map.js';
 //import { styleMap } from 'lit/directives/style-map.js';
-
+import styleString from "./advanced-dropdown.scss?inline";
 
 
 class AdvancedDropdownOption {
@@ -12,8 +12,16 @@ class AdvancedDropdownOption {
 
 @customElement('advanced-dropdown')
 export class AdvancedDropdown extends LitElement {
-	@state()
-	options: AdvancedDropdownOption[] = [];
+	static styles = unsafeCSS(styleString);
+
+	// Property to store the name of the hidden input
+	@property({ type: String }) inputName!: string;
+
+	@state() options: AdvancedDropdownOption[] = [];
+
+	@state() selection: AdvancedDropdownOption = new AdvancedDropdownOption('', 'select an option');
+
+	@state() isOptionsVisible = false;
 
 	constructor() {
 		super();
@@ -31,88 +39,64 @@ export class AdvancedDropdown extends LitElement {
 		];
 	}
 
+	// Ensure `inputName` is provided, otherwise throw an error
+	// firstUpdated = lifecycle method
+	firstUpdated() {
+		if (!this.inputName) {
+			throw new Error('inputName is required but was not provided');
+		}
+	}
+
+	// Toggles the visibility of the dropdown
+	toggleOptions() {
+		this.isOptionsVisible = !this.isOptionsVisible; // Toggle the visibility
+
+		if (this.isOptionsVisible) {
+			// Add document click listener when the dropdown is opened
+			document.addEventListener('click', this.handleClickOutside, true);
+		} else {
+			// Remove document click listener when the dropdown is closed
+			document.removeEventListener('click', this.handleClickOutside, true);
+		}
+	}
+
+	selectOption(option: AdvancedDropdownOption) {
+		this.selection = option; // Update the selection with the clicked option
+		this.isOptionsVisible = false; // Hide the options after selection
+
+		document.removeEventListener('click', this.handleClickOutside, true);
+	}
+
+	// Method to handle clicks outside the dropdown
+	handleClickOutside = (event: Event) => {
+		const path = event.composedPath(); // To handle shadow DOM clicks
+		const dropdown = this.shadowRoot?.querySelector('.advanced-dropdown');
+		if (!dropdown || !path.includes(dropdown)) {
+			this.isOptionsVisible = false;
+			document.removeEventListener('click', this.handleClickOutside, true);
+		}
+	};
+
 	render() {
 		return html`
 			<div class="advanced-dropdown">
-				<input type="hidden" name="optionInput">
-				<div class="selection">
-					select an option
+				<!-- Hidden input value bound to the selection value, and name bound to the inputName property -->
+				<input type="hidden" .name="${this.inputName}" .value="${this.selection.value}">
+				<!-- Dropdown selection area -->
+				<div class="selection" @click="${this.toggleOptions}">
+					<div value="${this.selection.value}">
+						${unsafeHTML(this.selection.label)}
+					</div>
 				</div>
-				<div class="options" style="display: none;">
+				<!-- Dropdown options -->
+				<div class="options" style="display: ${this.isOptionsVisible ? 'grid' : 'none'};">
 					${this.options.map(option => html`
-						<div class="option" value="${option.value}">
-							<div>
-								${unsafeHTML(option.label)}
-							</div>
+						<div class="option" value="${option.value}" @click="${() => this.selectOption(option)}">
+							${unsafeHTML(option.label)}
 						</div>
-						`)}	
+					`)}	
 				</div>
 			</div>
 		`;
 	}
-
-
-	static styles = css`
-		.advanced-dropdown {
-			position: relative;
-		}
-
-		.advanced-dropdown .selection {
-			border: 1pt solid black;
-			min-height: 1em;
-			padding: .5em 1em;
-			/* make text unselectable */
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-		}
-
-		.advanced-dropdown .selection:hover {
-			cursor: pointer;
-			background-color: lightgray;
-		}
-
-		.advanced-dropdown .options {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			width: 100%;
-			background-color: white;
-			border: 1pt solid black;
-			border-top: none;
-			max-height: 20em;
-			overflow-y: auto;
-			display: grid;
-			grid-template-rows: 1fr;
-			grid-gap: 0em;
-			padding: .5em;
-		}
-
-		.advanced-dropdown .options .option {
-			padding: .5em;
-			position: relative;
-		}
-
-		.advanced-dropdown .options .option:not(:first-child)::after {
-			content: '';
-			position: absolute;
-			background-color: darkgray;
-			z-index: 1;
-			inline-size: 100%;
-			block-size: 1pt;
-			inset-inline-start: 0;
-			inset-block-start: 0;
-		}
-
-		.advanced-dropdown .options .option:hover {
-			cursor: pointer;
-			background-color: lightgray;
-		}
-
-		.advanced-dropdown img {
-			border-radius: 3px;
-			border: 1pt solid lightgray;
-		}
-		`
 }
