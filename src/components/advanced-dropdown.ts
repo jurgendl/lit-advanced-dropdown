@@ -39,6 +39,10 @@ export class AdvancedDropdown extends LitElement {
 		];
 	}
 
+	createRenderRoot(): ShadowRoot | this {
+		return this;
+	}
+
 	// Ensure `inputName` is provided, otherwise throw an error
 	// firstUpdated = lifecycle method
 	firstUpdated() {
@@ -50,7 +54,10 @@ export class AdvancedDropdown extends LitElement {
 	// Toggles the visibility of the dropdown
 	toggleOptions() {
 		this.isOptionsVisible = !this.isOptionsVisible; // Toggle the visibility
+		this.adjustListener();
+	}
 
+	adjustListener() {
 		if (this.isOptionsVisible) {
 			// Add document click listener when the dropdown is opened
 			document.addEventListener('click', this.handleClickOutside, true);
@@ -63,8 +70,15 @@ export class AdvancedDropdown extends LitElement {
 	selectOption(option: AdvancedDropdownOption) {
 		this.selection = option; // Update the selection with the clicked option
 		this.isOptionsVisible = false; // Hide the options after selection
+		this.adjustListener();
 
-		document.removeEventListener('click', this.handleClickOutside, true);
+		// Dispatch a custom event to update the hidden input value
+		const event = new CustomEvent('selection-changed', {
+			detail: { value: option.value },
+			bubbles: true,
+			composed: true,
+		});
+		this.dispatchEvent(event);
 	}
 
 	// Method to handle clicks outside the dropdown
@@ -73,7 +87,7 @@ export class AdvancedDropdown extends LitElement {
 		const dropdown = this.shadowRoot?.querySelector('.advanced-dropdown');
 		if (!dropdown || !path.includes(dropdown)) {
 			this.isOptionsVisible = false;
-			document.removeEventListener('click', this.handleClickOutside, true);
+			this.adjustListener();
 		}
 	};
 
@@ -81,7 +95,7 @@ export class AdvancedDropdown extends LitElement {
 		return html`
 			<div class="advanced-dropdown">
 				<!-- Hidden input value bound to the selection value, and name bound to the inputName property -->
-				<input type="hidden" .name="${this.inputName}" .value="${this.selection.value}">
+				<input type="hidden" .name="${this.inputName}" .id="${this.inputName}" .value="${this.selection.value}">
 				<!-- Dropdown selection area -->
 				<div class="selection" @click="${this.toggleOptions}">
 					<div value="${this.selection.value}">
