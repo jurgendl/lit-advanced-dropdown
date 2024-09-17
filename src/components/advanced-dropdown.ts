@@ -17,26 +17,14 @@ export class AdvancedDropdown extends LitElement {
 	// Property to store the name of the hidden input
 	@property({ type: String }) inputName!: string;
 
-	@state() options: AdvancedDropdownOption[] = [];
+	@property({ type: Array }) options: AdvancedDropdownOption[] = [];
 
-	@state() selection: AdvancedDropdownOption = new AdvancedDropdownOption('', 'select an option');
+	@state() selection: AdvancedDropdownOption | null = null;
 
 	@state() isOptionsVisible = false;
 
 	constructor() {
 		super();
-		this.options = [
-			new AdvancedDropdownOption('1', '<img src="https://picsum.photos/40?1"> option 1'),
-			new AdvancedDropdownOption('2', '<img src="https://picsum.photos/40?2"> option 2'),
-			new AdvancedDropdownOption('3', '<img src="https://picsum.photos/40?3"> option 3'),
-			new AdvancedDropdownOption('4', '<img src="https://picsum.photos/40?4"> option 4'),
-			new AdvancedDropdownOption('5', '<img src="https://picsum.photos/40?5"> option 5'),
-			new AdvancedDropdownOption('6', '<img src="https://picsum.photos/40?6"> option 6'),
-			new AdvancedDropdownOption('7', '<img src="https://picsum.photos/40?7"> option 7'),
-			new AdvancedDropdownOption('8', '<img src="https://picsum.photos/40?8"> option 8'),
-			new AdvancedDropdownOption('9', '<img src="https://picsum.photos/40?9"> option 9'),
-			new AdvancedDropdownOption('10', '<img src="https://picsum.photos/40?10"> option 10'),
-		];
 	}
 
 	createRenderRoot(): ShadowRoot | this {
@@ -71,14 +59,6 @@ export class AdvancedDropdown extends LitElement {
 		this.selection = option; // Update the selection with the clicked option
 		this.isOptionsVisible = false; // Hide the options after selection
 		this.adjustListener();
-
-		// Dispatch a custom event to update the hidden input value
-		const event = new CustomEvent('selection-changed', {
-			detail: { value: option.value },
-			bubbles: true,
-			composed: true,
-		});
-		this.dispatchEvent(event);
 	}
 
 	// Method to handle clicks outside the dropdown
@@ -95,11 +75,11 @@ export class AdvancedDropdown extends LitElement {
 		return html`
 			<div class="advanced-dropdown">
 				<!-- Hidden input value bound to the selection value, and name bound to the inputName property -->
-				<input type="hidden" .name="${this.inputName}" .id="${this.inputName}" .value="${this.selection.value}">
+				<input type="hidden" .name="${this.inputName}" .id="${this.inputName}" .value="${this.selection?.value || ''}">
 				<!-- Dropdown selection area -->
 				<div class="selection" @click="${this.toggleOptions}">
-					<div value="${this.selection.value}">
-						${unsafeHTML(this.selection.label)}
+					<div value="${this.selection?.value || ''}">
+						${this.selection ? unsafeHTML(this.selection.label) : '...'}
 					</div>
 				</div>
 				<!-- Dropdown options -->
