@@ -12,8 +12,6 @@ class AdvancedDropdownOption {
 
 @customElement('advanced-dropdown')
 export class AdvancedDropdown extends LitElement {
-	static styles = unsafeCSS(styleString);
-
 	// Property to store the name of the hidden input
 	@property({ type: String }) inputName!: string;
 
@@ -27,9 +25,9 @@ export class AdvancedDropdown extends LitElement {
 		super();
 	}
 
-	createRenderRoot(): ShadowRoot | this {
+	/*createRenderRoot(): ShadowRoot | this {
 		return this;
-	}
+	}*/
 
 	// Ensure `inputName` is provided, otherwise throw an error
 	// firstUpdated = lifecycle method
@@ -93,4 +91,14 @@ export class AdvancedDropdown extends LitElement {
 			</div>
 		`;
 	}
+
+		// needs to be static and last
+	static styles = unsafeCSS(styleString);
 }
+
+// error
+/*declare global {
+	interface HTMLElementTagNameMap {
+		'advanced-dropdown': AdvancedDropdown
+	}
+}*/
