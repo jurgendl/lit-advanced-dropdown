@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 .advanced-dropdown {
     position: relative;
 }
@@ -35,8 +41,10 @@
     display: grid;
     grid-template-rows: 1fr;
     grid-gap: 0em;
-    padding: .5em;
+    padding: 0em;
     z-index: 9;
+	/* https://getcssscan.com/css-box-shadow-examples */
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 15px;
 }
 
 .advanced-dropdown .options .option {
