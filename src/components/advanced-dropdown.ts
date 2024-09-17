@@ -76,14 +76,14 @@ export class AdvancedDropdown extends LitElement {
 				<input type="hidden" .name="${this.inputName}" .id="${this.inputName}" .value="${this.selection?.value || ''}">
 				<!-- Dropdown selection area -->
 				<div class="selection" @click="${this.toggleOptions}">
-					<div value="${this.selection?.value || ''}">
+					<div class="display" value="${this.selection?.value || ''}">
 						${this.selection ? unsafeHTML(this.selection.label) : '...'}
 					</div>
 				</div>
 				<!-- Dropdown options -->
 				<div class="options" style="display: ${this.isOptionsVisible ? 'grid' : 'none'};">
 					${this.options.map(option => html`
-						<div class="option" value="${option.value}" @click="${() => this.selectOption(option)}">
+						<div class="option display" value="${option.value}" @click="${() => this.selectOption(option)}">
 							${unsafeHTML(option.label)}
 						</div>
 					`)}	
@@ -92,7 +92,7 @@ export class AdvancedDropdown extends LitElement {
 		`;
 	}
 
-		// needs to be static and last
+	// needs to be static and last
 	static styles = unsafeCSS(styleString);
 }
 

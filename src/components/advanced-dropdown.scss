@@ -1,66 +1,72 @@
 .advanced-dropdown {
-	position: relative;
+    position: relative;
 }
 
 .advanced-dropdown .selection {
-	border: 1pt solid black;
-	min-height: 1em;
-	padding: .5em 1em;
-	/* make text unselectable */
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    border: 1pt solid black;
+    min-height: 1em;
+    padding: .5em 1em;
+    /* make text unselectable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .advanced-dropdown .selection:active {
-	outline: 1pt solid black;
+    outline: 1pt solid black;
 }
 
 .advanced-dropdown .selection:hover {
-	cursor: pointer;
-	background-color: lightgray;
+    cursor: pointer;
+    background-color: lightgray;
 }
 
 .advanced-dropdown .options {
-	position: absolute;
-	top: 100%;
-	left: 0;
-	width: 100%;
-	background-color: white;
-	border: 1pt solid black;
-	border-top: none;
-	max-height: 20em;
-	overflow-y: auto;
-	display: grid;
-	grid-template-rows: 1fr;
-	grid-gap: 0em;
-	padding: .5em;			
-	z-index: 9;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1pt solid black;
+    border-top: none;
+    max-height: 20em;
+    overflow-y: auto;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 0em;
+    padding: .5em;
+    z-index: 9;
 }
 
 .advanced-dropdown .options .option {
-	padding: .5em;
-	position: relative;
+    padding: .5em;
+    position: relative;
 }
 
 .advanced-dropdown .options .option:not(:first-child)::after {
-	content: '';
-	position: absolute;
-	background-color: darkgray;
-	z-index: 1;
-	inline-size: 100%;
-	block-size: 1pt;
-	inset-inline-start: 0;
-	inset-block-start: 0;
+    content: '';
+    position: absolute;
+    background-color: darkgray;
+    z-index: 1;
+    inline-size: 100%;
+    block-size: 1pt;
+    inset-inline-start: 0;
+    inset-block-start: 0;
 }
 
 .advanced-dropdown .options .option:hover {
-	cursor: pointer;
-	background-color: lightgray;
+    cursor: pointer;
+    background-color: lightgray;
 }
 
 .advanced-dropdown img {
-	border-radius: 3px;
-	border: 1pt solid lightgray;
+    border-radius: 3px;
+    border: 1pt solid lightgray;
+}
+
+.advanced-dropdown .display {
+    display: flex;
+    align-items: center;
+	gap: 5px;
 }
