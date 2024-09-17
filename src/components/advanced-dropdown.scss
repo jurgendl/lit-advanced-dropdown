@@ -11,7 +11,7 @@
 .advanced-dropdown .selection {
     border: 1pt solid black;
     min-height: 1em;
-    padding: .5em 1em;
+    padding: .5em;
     /* make text unselectable */
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -44,7 +44,7 @@
     padding: 0em;
     z-index: 9;
 	/* https://getcssscan.com/css-box-shadow-examples */
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 15px;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
 }
 
 .advanced-dropdown .options .option {
