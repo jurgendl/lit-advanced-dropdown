@@ -1,7 +1,13 @@
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
+.advanced-dropdown {
+    --border-color: #333;
+    --hover-color: #00000009;
+    --splitter-color: #00000011;
+}
+
+.advanced-dropdown *,
+.advanced-dropdown *::before,
+.advanced-dropdown *::after {
+    box-sizing: border-box;
 }
 
 .advanced-dropdown {
@@ -9,7 +15,7 @@
 }
 
 .advanced-dropdown .selection {
-    border: 1pt solid black;
+    border: 1pt solid var(--border-color);
     min-height: 1em;
     padding: .5em;
     /* make text unselectable */
@@ -19,32 +25,35 @@
     user-select: none;
 }
 
+.advanced-dropdown .selection:focus,
 .advanced-dropdown .selection:active {
     outline: 1pt solid black;
 }
 
 .advanced-dropdown .selection:hover {
     cursor: pointer;
-    background-color: lightgray;
+    background-color: var(--hover-color);
 }
 
 .advanced-dropdown .options {
     position: absolute;
     top: 100%;
     left: 0;
-    width: 100%;
+    right: 0;
+    /*width: 100%;*/
     background-color: white;
-    border: 1pt solid black;
+    border: 1pt solid var(--border-color);
     border-top: none;
     max-height: 20em;
     overflow-y: auto;
+	scrollbar-width: thin;	
     display: grid;
     grid-template-rows: 1fr;
     grid-gap: 0em;
     padding: 0em;
     z-index: 9;
-	/* https://getcssscan.com/css-box-shadow-examples */
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+    /* https://getcssscan.com/css-box-shadow-examples */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
 }
 
 .advanced-dropdown .options .option {
@@ -55,7 +64,7 @@
 .advanced-dropdown .options .option:not(:first-child)::after {
     content: '';
     position: absolute;
-    background-color: darkgray;
+    background-color: var(--splitter-color);
     z-index: 1;
     inline-size: 100%;
     block-size: 1pt;
@@ -65,16 +74,16 @@
 
 .advanced-dropdown .options .option:hover {
     cursor: pointer;
-    background-color: lightgray;
+    background-color: var(--hover-color);
 }
 
 .advanced-dropdown img {
     border-radius: 3px;
-    border: 1pt solid lightgray;
+    border: 1pt solid var(--hover-color);
 }
 
 .advanced-dropdown .display {
     display: flex;
     align-items: center;
-	gap: 5px;
+    gap: 5px;
 }
